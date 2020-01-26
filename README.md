@@ -25,11 +25,11 @@ It's a good idea to do several runs and compare the output like so
 ------------
 
 For Risc-V Fedora RFS doesn't have the rpc/rpc.h installed. Following works around. 
- - install tirpc package
- 	dnf install libtirpc-devel
- - Specify flags in either the FLAGS 
-        CFLAGS="-I/usr/include/tirpc"
-	LFLAGS="-ltirpc"
+ - install tirpc package <br />
+  $ dnf install libtirpc-devel
+  - Specify flags in either the FLAGS <br />
+CFLAGS="-I/usr/include/tirpc" <br />
+LFLAGS="-ltirpc" <br />
 
 Additionally, following tune up flags are used conforming the CPU pipeline.
 
