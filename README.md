@@ -21,3 +21,23 @@ It's a good idea to do several runs and compare the output like so
 	make rerun
 	make rerun
 	cd Results && make LIST=<your OS>/*
+
+------------
+
+For Risc-V Fedora RFS doesn't have the rpc/rpc.h installed. Following works around. 
+ - install tirpc package <br />
+  $ dnf install libtirpc-devel
+  - Specify flags in either the FLAGS <br />
+CFLAGS="-I/usr/include/tirpc" <br />
+LFLAGS="-ltirpc" <br />
+
+Additionally, following tune up flags are used conforming the CPU pipeline.
+
+For FU54
+	-O3 -mtune=rocket
+For U74
+	-O3 -mtune=sifive-7-series
+
+Ex.
+	CFLAGS="-O3 -mtune=rocket -I/usr/include/tirpc" LDFLAGS="-ltirpc" make
+
