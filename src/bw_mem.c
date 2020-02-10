@@ -30,6 +30,7 @@ char	*id = "$Id$";
  * XXX - do a 64bit version of this.
  */
 void	rd(iter_t iterations, void *cookie);
+void	rd64(iter_t iterations, void *cookie);
 void	wr(iter_t iterations, void *cookie);
 void	rdwr(iter_t iterations, void *cookie);
 void	mcp(iter_t iterations, void *cookie);
@@ -108,6 +109,9 @@ main(int ac, char **av)
 	if (streq(av[optind+1], "rd")) {
 		benchmp(init_loop, rd, cleanup, 0, parallel, 
 			warmup, repetitions, &state);
+	} else if (streq(av[optind+1], "rd64")) {
+		benchmp(init_loop, rd64, cleanup, 0, parallel,
+			warmup, repetitions, &state);
 	} else if (streq(av[optind+1], "wr")) {
 		benchmp(init_loop, wr, cleanup, 0, parallel, 
 			warmup, repetitions, &state);
@@ -151,8 +155,8 @@ init_loop(iter_t iterations, void *cookie)
 	state_t *state = (state_t *) cookie;
 
 	if (iterations) return;
-
         state->buf = (TYPE *)valloc(state->nbytes);
+	printf(" buf = %p \n",state->buf);
 	state->buf2_orig = NULL;
 	state->lastone = (TYPE*)state->buf - 1;
 	state->lastone = (TYPE*)((char *)state->buf + state->nbytes - 512);
@@ -217,6 +221,29 @@ rd(iter_t iterations, void *cookie)
 	use_int(sum);
 }
 #undef	DOIT
+
+void
+rd64(iter_t iterations, void *cookie)
+{
+        state_t *state = (state_t *) cookie;
+        register TYPE *lastone = state->lastone;
+        register int sum = 0;
+
+        while (iterations-- > 0) {
+            register TYPE *p = state->buf;
+            while (p <= lastone) {
+                sum +=
+#define DOIT(i) p[i]+
+                DOIT(0) DOIT(16) DOIT(32) DOIT(48)
+		DOIT(64) DOIT(80) DOIT(96)
+                p[112];
+                p +=  128;
+            }
+        }
+        use_int(sum);
+}
+#undef	DOIT
+
 
 void
 wr(iter_t iterations, void *cookie)
@@ -294,7 +321,6 @@ fwr(iter_t iterations, void *cookie)
 	state_t *state = (state_t *) cookie;
 	register TYPE *lastone = state->lastone;
 	TYPE* p_save = NULL;
-
 	while (iterations-- > 0) {
 	    register TYPE *p = state->buf;
 	    while (p <= lastone) {
