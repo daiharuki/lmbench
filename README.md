@@ -28,16 +28,27 @@ For Risc-V Fedora RFS doesn't have the rpc/rpc.h installed. Following works arou
  - install tirpc package <br />
   $ dnf install libtirpc-devel
   - Specify flags in either the FLAGS <br />
-CFLAGS="-I/usr/include/tirpc" <br />
-LFLAGS="-ltirpc" <br />
+
+Following necessary flags are set in the src/Makefile <br />
+   CFLAGS="-I/usr/include/tirpc" <br />
+   LFLAGS="-ltirpc" <br />
 
 Additionally, following tune up flags are used conforming the CPU pipeline.
 
 For FU54
-	-O3 -mtune=rocket
+	-O3 -mtune=rocket -mtune=sifive-5-series
 For U74
 	-O3 -mtune=sifive-7-series
 
+Optionally, following optimization flags are considered:
+
+-mcmodel=medlow or -mcmodel=medany <br />
+-mexplicit-relocs or -mno-exlicit-relocs <br />
+
+In the case -O3 switch costs the code size more than desired, following switch would help generate the load/store double where the 4B load/store can be merged to 8B load/store. <br />
+-fvect-cost-model 
+
+
 Ex.
-	CFLAGS="-O3 -mtune=rocket -I/usr/include/tirpc" LDFLAGS="-ltirpc" make
+	CFLAGS="-O3 -mtune=rocket"  make
 
