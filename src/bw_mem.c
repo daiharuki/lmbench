@@ -322,7 +322,7 @@ fwr(iter_t iterations, void *cookie)
 	register TYPE *lastone = state->lastone;
 	TYPE* p_save = NULL;
 	while (iterations-- > 0) {
-	    register TYPE *p = state->buf;
+	    register TYPE *p = __builtin_assume_aligned(state->buf, 8);
 	    while (p <= lastone) {
 #define	DOIT(i)	p[i]=
 		DOIT(0) DOIT(1) DOIT(2) DOIT(3) DOIT(4) DOIT(5) DOIT(6)
