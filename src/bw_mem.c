@@ -156,7 +156,6 @@ init_loop(iter_t iterations, void *cookie)
 
 	if (iterations) return;
         state->buf = (TYPE *)valloc(state->nbytes);
-	printf(" buf = %p \n",state->buf);
 	state->buf2_orig = NULL;
 	state->lastone = (TYPE*)state->buf - 1;
 	state->lastone = (TYPE*)((char *)state->buf + state->nbytes - 512);
