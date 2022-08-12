@@ -77,7 +77,7 @@ typedef long long int64;
 #endif /* HAVE_int64_t */
 #endif /* HAVE_int64 */
 
-#ifndef HAVE_socklen_t
+#ifndef __socklen_t_defined
 typedef int socklen_t;
 #endif
 
